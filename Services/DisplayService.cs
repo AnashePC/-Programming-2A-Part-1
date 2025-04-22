@@ -45,5 +45,41 @@ namespace CybersecurityChatbot.Services
 
             return name.Trim();
         }
+        public void PrintWelcomeMessage(string userName)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"\nWelcome, {userName}! Ask me about cybersecurity topics.");
+            Console.WriteLine("You can ask about passwords, phishing, or safe browsing.");
+            Console.WriteLine("Type 'exit' to end the chat.");
+            Console.ResetColor();
+        }
+
+        public void PromptForQuestion()
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.Write("\nWhat would you like to know about? ");
+            Console.ResetColor();
+        }
+
+        public void PrintNoInputMessage()
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("I didn't hear anything. Try again.");
+            Console.ResetColor();
+        }
+
+        public void PrintGoodbyeMessage(string userName)
+        {
+            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.WriteLine($"\nGoodbye, {userName}! Stay safe online!");
+            Console.ResetColor();
+        }
+
+        public void PrintResponse(string response)
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine("\n" + response);
+            Console.ResetColor();
+        }
     }
 }
