@@ -14,7 +14,31 @@ namespace CybersecurityChatbot.Services
             @" |____/ \__,_|_.__/|_|  \___|\__,_| |_|\___/ \__|_| |_|\___/|_| |_| |____/ \__,_|___/_| |_|",
             ""
         };
+        public void ShowStartupStatus()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("\nStarting up cybersecurity chatbot");
 
+            // Animated dots
+            for (int i = 0; i < 3; i++)
+            {
+                Console.Write(".");
+                Thread.Sleep(300);
+            }
+
+            Console.WriteLine("\nInitializing security protocols");
+            Thread.Sleep(500);
+
+            Console.WriteLine("Loading knowledge base");
+            Thread.Sleep(500);
+
+            Console.WriteLine("Establishing secure connection");
+            Thread.Sleep(500);
+
+            Console.ResetColor();
+            Console.WriteLine(new string('=', 80));
+            Thread.Sleep(300);
+        }
         public void DisplayAsciiArt()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
