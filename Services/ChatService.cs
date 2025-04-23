@@ -40,10 +40,16 @@ namespace CybersecurityChatbot.Services
                     continue;
                 }
 
+                if (userInput == "quiz")
+                {
+                    quizService.OfferQuiz(_discussedTopics);
+                    continue;
+                }
+
                 var (response, topic) = _responseService.GetResponse(userInput, userName);
                 _displayService.PrintResponse(response);
 
-                if (!_discussedTopics.Contains(topic) && topic != "greeting" && topic != "thanks" && topic != "unknown")
+                if (!_discussedTopics.Contains(topic) && topic != "greeting" && topic != "thanks" && topic != "unknown" && topic != "help")
                 {
                     _discussedTopics.Add(topic);
                 }
