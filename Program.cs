@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms.Design;
 using CybersecurityChatbot.Services;
 
 namespace CybersecurityChatbot
@@ -14,12 +13,17 @@ namespace CybersecurityChatbot
             var chatService = new ChatService(displayService, responseService);
             var quizService = new QuizService(displayService);
 
+            // Play sound immediately on startup
+            soundService.PlayWelcomeSound();
+
+            // Then show the welcome screen
             displayService.DisplayAsciiArt();
             displayService.DisplayWelcomeScreen();
 
-            Console.ReadLine(); // Wait for user to press Enter
+            // Wait for user to press Enter
+            Console.ReadLine();
 
-            soundService.PlayWelcomeSound();
+            // Get user name and start chat
             string userName = displayService.GetUserName();
             chatService.StartChat(userName, quizService);
         }
