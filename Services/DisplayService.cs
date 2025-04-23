@@ -29,6 +29,9 @@ namespace CybersecurityChatbot.Services
 
         public void DisplayWelcomeScreen()
         {
+            // Small delay to ensure sound has started
+            Thread.Sleep(300);
+
             Console.Clear();
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("\n" + new string('=', 50));
@@ -38,7 +41,7 @@ namespace CybersecurityChatbot.Services
             Console.WriteLine("\n");
             Console.ResetColor();
 
-            // Draw a button with sound indicator
+            // Draw a button
             Console.ForegroundColor = ConsoleColor.Black;
             Console.BackgroundColor = ConsoleColor.Green;
             Console.WriteLine("    =====================    ");
@@ -49,7 +52,7 @@ namespace CybersecurityChatbot.Services
 
             Console.WriteLine("\n");
             Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("(You should hear a welcome sound)");
+            Console.WriteLine("(ESC to exit)");
             Console.ResetColor();
         }
 

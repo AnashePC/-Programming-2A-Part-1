@@ -13,17 +13,15 @@ namespace CybersecurityChatbot
             var chatService = new ChatService(displayService, responseService);
             var quizService = new QuizService(displayService);
 
-            // Play sound immediately on startup
+            // Play sound immediately when program starts
             soundService.PlayWelcomeSound();
 
-            // Then show the welcome screen
+            // Then show the interface
             displayService.DisplayAsciiArt();
             displayService.DisplayWelcomeScreen();
 
-            // Wait for user to press Enter
-            Console.ReadLine();
+            Console.ReadLine(); // Wait for user to press Enter
 
-            // Get user name and start chat
             string userName = displayService.GetUserName();
             chatService.StartChat(userName, quizService);
         }

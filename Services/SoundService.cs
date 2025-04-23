@@ -11,19 +11,20 @@ namespace CybersecurityChatbot.Services
         {
             try
             {
-                // Play sound asynchronously so it doesn't block the UI
-                new Thread(() =>
-                {
-                    string soundPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "welcome.wav");
+                string soundPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "welcome.wav");
 
-                    if (File.Exists(soundPath))
+                if (File.Exists(soundPath))
+                {
+                    using (var player = new SoundPlayer(soundPath))
                     {
-                        using (var player = new SoundPlayer(soundPath))
-                        {
-                            player.PlaySync(); // PlaySync ensures the sound plays completely
-                        }
+                        player.Play();
+                        Thread.Sleep(500);
                     }
-                }).Start();
+                }
+                else
+                {
+                    Console.WriteLine("Sound file not found.");
+                }
             }
             catch (Exception ex)
             {
