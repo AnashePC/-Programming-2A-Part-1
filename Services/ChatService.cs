@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CybersecurityChatbot.Services
 {
@@ -6,14 +7,15 @@ namespace CybersecurityChatbot.Services
     {
         private readonly DisplayService _displayService;
         private readonly ResponseService _responseService;
+        private List<string> _discussedTopics = new List<string>();
 
-        public ChatService(DisplayService displayService)
+        public ChatService(DisplayService displayService, ResponseService responseService)
         {
             _displayService = displayService;
-            _responseService = new ResponseService();
+            _responseService = responseService;
         }
 
-        public void StartChat(string userName)
+        public void StartChat(string userName, QuizService quizService)
         {
             _displayService.PrintWelcomeMessage(userName);
 
@@ -38,8 +40,18 @@ namespace CybersecurityChatbot.Services
                     continue;
                 }
 
-                string response = _responseService.GetResponse(userInput, userName);
+                var (response, topic) = _responseService.GetResponse(userInput, userName);
                 _displayService.PrintResponse(response);
+
+                if (!_discussedTopics.Contains(topic) && topic != "greeting" && topic != "thanks" && topic != "unknown")
+                {
+                    _discussedTopics.Add(topic);
+                }
+
+                if (_responseService.ShouldOfferQuiz())
+                {
+                    quizService.OfferQuiz(_discussedTopics);
+                }
             }
         }
     }

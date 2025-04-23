@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Threading;
+using System.Windows.Forms.Design;
 using CybersecurityChatbot.Services;
 
 namespace CybersecurityChatbot
@@ -8,17 +8,20 @@ namespace CybersecurityChatbot
     {
         static void Main(string[] args)
         {
-            var displayService = new DisplayService();
-            displayService.ShowStartupStatus();
-
             var soundService = new SoundService();
-            var chatService = new ChatService(displayService);
+            var displayService = new DisplayService();
+            var responseService = new ResponseService();
+            var chatService = new ChatService(displayService, responseService);
+            var quizService = new QuizService(displayService);
+
+            displayService.DisplayAsciiArt();
+            displayService.DisplayWelcomeScreen();
+
+            Console.ReadLine(); // Wait for user to press Enter
 
             soundService.PlayWelcomeSound();
-            displayService.DisplayAsciiArt();
-
             string userName = displayService.GetUserName();
-            chatService.StartChat(userName);
+            chatService.StartChat(userName, quizService);
         }
     }
 }
