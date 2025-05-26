@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CybersecurityChatbot.Services
 {
@@ -7,25 +8,28 @@ namespace CybersecurityChatbot.Services
     {
         private readonly DisplayService _displayService;
         private readonly ResponseService _responseService;
+        private readonly QuizService _quizService;
         private List<string> _discussedTopics = new List<string>();
+        private bool _quizOffered = false;
+        private string _lastTopic = "";
+        private int _repeatCount = 0;
 
-        public ChatService(DisplayService displayService, ResponseService responseService)
+        public ChatService(DisplayService displayService, ResponseService responseService, QuizService quizService)
         {
             _displayService = displayService;
             _responseService = responseService;
+            _quizService = quizService;
         }
 
-        public void StartChat(string userName, QuizService quizService)
+        public void StartChat(string userName)
         {
             _displayService.PrintWelcomeMessage(userName);
 
             bool continueChat = true;
-
             while (continueChat)
             {
                 _displayService.PromptForQuestion();
-
-                string userInput = Console.ReadLine()?.Trim().ToLower();
+                string userInput = Console.ReadLine()?.Trim();
 
                 if (string.IsNullOrWhiteSpace(userInput))
                 {
@@ -33,30 +37,47 @@ namespace CybersecurityChatbot.Services
                     continue;
                 }
 
-                if (userInput == "exit")
+                if (userInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 {
                     continueChat = false;
                     _displayService.PrintGoodbyeMessage(userName);
                     continue;
                 }
 
-                if (userInput == "quiz")
+                var (response, topic) = _responseService.GetResponse(userInput, userName);
+
+                // Handle topic repetition
+                if (topic == _lastTopic)
                 {
-                    quizService.OfferQuiz(_discussedTopics);
-                    continue;
+                    _repeatCount++;
+                    if (_repeatCount > 2)
+                    {
+                        response += "\n\nWould you like to:\n1. Get more examples\n2. Move to another topic\n3. Take the quiz now";
+                    }
+                }
+                else
+                {
+                    _repeatCount = 0;
+                    _lastTopic = topic;
                 }
 
-                var (response, topic) = _responseService.GetResponse(userInput, userName);
                 _displayService.PrintResponse(response);
 
-                if (!_discussedTopics.Contains(topic) && topic != "greeting" && topic != "thanks" && topic != "unknown" && topic != "help")
+                // Track discussed topics
+                if (!string.IsNullOrEmpty(topic) &&
+                    !new[] { "greeting", "thanks", "help", "quiz", "start-quiz", "unknown" }.Contains(topic))
                 {
-                    _discussedTopics.Add(topic);
+                    if (!_discussedTopics.Contains(topic))
+                    {
+                        _discussedTopics.Add(topic);
+                    }
                 }
 
-                if (_responseService.ShouldOfferQuiz())
+                // Offer quiz
+                if (_responseService.ShouldOfferQuiz() && !_quizOffered)
                 {
-                    quizService.OfferQuiz(_discussedTopics);
+                    _displayService.PrintQuizOffer();
+                    _quizOffered = true;
                 }
             }
         }

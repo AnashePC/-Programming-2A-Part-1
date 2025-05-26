@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Text;
 using System.Threading;
 
 namespace CybersecurityChatbot.Services
 {
     public class DisplayService
     {
-        private static readonly string[] asciiArt = new string[]
+        private static readonly string[] AsciiArt =
         {
             @"  ____        _                  _   _       _   _                  ____            _     ",
             @" / ___| _   _| |__  _ __ ___  __| | | | ___ | |_| |__   ___  _ __   | __ )  __ _ ___| |__  ",
@@ -15,63 +16,63 @@ namespace CybersecurityChatbot.Services
             ""
         };
 
+        private const int ConsoleWidth = 80;
+        private readonly StringBuilder _displayBuffer = new StringBuilder();
+
         public void DisplayAsciiArt()
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            foreach (string line in asciiArt)
+            foreach (string line in AsciiArt)
             {
-                Console.WriteLine(line);
+                Console.WriteLine(line.PadCenter(ConsoleWidth));
                 Thread.Sleep(100);
             }
             Console.ResetColor();
-            Console.WriteLine(new string('=', 80));
+            PrintDivider();
         }
 
         public void DisplayWelcomeScreen()
         {
-            // Small delay to ensure sound has started
-            Thread.Sleep(300);
+            ClearBuffer();
+            AddToBuffer("CYBERSECURITY CHATBOT".PadCenter(ConsoleWidth), ConsoleColor.Yellow);
+            AddToBuffer(new string('=', ConsoleWidth), ConsoleColor.Yellow);
+            AddToBuffer("\nThis interactive chatbot can help you with:", ConsoleColor.Cyan);
 
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("\n" + new string('=', 50));
-            Console.WriteLine("       CYBERSECURITY CHATBOT");
-            Console.WriteLine(new string('=', 50));
+            AddToBuffer("• Password security and management", ConsoleColor.White);
+            AddToBuffer("• Identifying and avoiding phishing scams", ConsoleColor.White);
+            AddToBuffer("• Safe internet browsing practices", ConsoleColor.White);
+            AddToBuffer("• Protecting against malware and viruses", ConsoleColor.White);
+            AddToBuffer("• Social media privacy and security", ConsoleColor.White);
+            AddToBuffer("• Securing your personal data online", ConsoleColor.White);
+            AddToBuffer("• Home network and WiFi security", ConsoleColor.White);
+            AddToBuffer("• Online gaming safety", ConsoleColor.White);
+            AddToBuffer("• Mobile device protection", ConsoleColor.White);
+            AddToBuffer("• Cloud storage security", ConsoleColor.White);
 
-            Console.WriteLine("\n");
-            Console.ResetColor();
+            AddToBuffer("\nYou can ask questions in natural language, like:", ConsoleColor.Cyan);
+            AddToBuffer("- How do I create a strong password?", ConsoleColor.White);
+            AddToBuffer("- What should I look for in phishing emails?", ConsoleColor.White);
+            AddToBuffer("- How can I browse safely on public WiFi?", ConsoleColor.White);
 
-            // Draw a button
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.BackgroundColor = ConsoleColor.Green;
-            Console.WriteLine("    =====================    ");
-            Console.WriteLine("    |   PRESS ENTER TO   |    ");
-            Console.WriteLine("    |       START        |    ");
-            Console.WriteLine("    =====================    ");
-            Console.ResetColor();
+            AddToBuffer("\nPress ENTER to begin...".PadCenter(ConsoleWidth), ConsoleColor.Green);
 
-            Console.WriteLine("\n");
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("(ESC to exit)");
-            Console.ResetColor();
+            FlushBuffer();
         }
 
         public string GetUserName()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("\nWhat's your name? ");
-            Console.ResetColor();
+            ClearBuffer();
+            AddToBuffer("What's your name? ", ConsoleColor.Yellow);
+            FlushBuffer();
 
             string name = Console.ReadLine();
 
             while (string.IsNullOrWhiteSpace(name) || name.Length < 3)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Name must be at least 3 characters long.");
-                Console.ResetColor();
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.Write("What's your name? ");
-                Console.ResetColor();
+                ClearBuffer();
+                AddToBuffer("Name must be at least 3 characters long.", ConsoleColor.Red);
+                AddToBuffer("What's your name? ", ConsoleColor.Yellow);
+                FlushBuffer();
                 name = Console.ReadLine();
             }
 
@@ -80,40 +81,109 @@ namespace CybersecurityChatbot.Services
 
         public void PrintWelcomeMessage(string userName)
         {
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\nWelcome, {userName}! Ask me about cybersecurity topics.");
-            Console.WriteLine("You can ask about passwords, phishing, malware, social media,");
-            Console.WriteLine("privacy, network security, gaming security, mobile security,");
-            Console.WriteLine("or cloud security. Type 'exit' to end the chat.");
-            Console.ResetColor();
+            ClearBuffer();
+            PrintDivider();
+            AddToBuffer($"Welcome, {userName}!", ConsoleColor.Green);
+            AddToBuffer("Ask me anything about cybersecurity!", ConsoleColor.Green);
+            AddToBuffer("\nTry asking about:", ConsoleColor.Cyan);
+            AddToBuffer("- Creating and managing secure passwords", ConsoleColor.White);
+            AddToBuffer("- Recognizing online scams and phishing", ConsoleColor.White);
+            AddToBuffer("- Protecting your devices and data", ConsoleColor.White);
+            AddToBuffer("\nType 'topics' to see everything I can help with", ConsoleColor.Cyan);
+            AddToBuffer("Type 'exit' to end our conversation", ConsoleColor.Cyan);
+            PrintDivider();
+            FlushBuffer();
         }
 
         public void PromptForQuestion()
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.Write("\nWhat would you like to know about? ");
-            Console.ResetColor();
-        }
-
-        public void PrintNoInputMessage()
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("I didn't hear anything. Try again.");
-            Console.ResetColor();
-        }
-
-        public void PrintGoodbyeMessage(string userName)
-        {
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine($"\nGoodbye, {userName}! Stay safe online!");
-            Console.ResetColor();
+            ClearBuffer();
+            AddToBuffer("\nWhat would you like to know about? ", ConsoleColor.Yellow);
+            FlushBuffer();
         }
 
         public void PrintResponse(string response)
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine("\n" + response);
-            Console.ResetColor();
+            ClearBuffer();
+            PrintDivider();
+
+            // Special formatting for phishing responses
+            if (response.Contains("PHISHING ALERT"))
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(new string('=', ConsoleWidth));
+                Console.WriteLine("⚠️ IMPORTANT SECURITY WARNING ⚠️".PadCenter(ConsoleWidth));
+                Console.WriteLine(new string('=', ConsoleWidth));
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(response);
+                Console.ResetColor();
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(new string('=', ConsoleWidth));
+                Console.WriteLine("🚨 REMEMBER: Never share sensitive data via links! 🚨".PadCenter(ConsoleWidth));
+                Console.WriteLine(new string('=', ConsoleWidth));
+                Console.ResetColor();
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(response);
+                Console.ResetColor();
+                PrintDivider();
+            }
+        }
+
+        public void PrintNoInputMessage()
+        {
+            ClearBuffer();
+            AddToBuffer("I didn't hear anything. Try again.", ConsoleColor.Red);
+            PrintInputHint();
+            FlushBuffer();
+        }
+
+        public void PrintGoodbyeMessage(string userName)
+        {
+            ClearBuffer();
+            PrintDivider();
+            AddToBuffer($"Goodbye, {userName}! Stay safe online!", ConsoleColor.Magenta);
+            PrintDivider();
+            FlushBuffer();
+        }
+
+        public void PrintQuizInvitation()
+        {
+            ClearBuffer();
+            PrintDivider();
+            AddToBuffer("Would you like to take a short quiz on what we've discussed?", ConsoleColor.Yellow);
+            AddToBuffer("Type 'yes' to begin the quiz or anything else to continue chatting...", ConsoleColor.Cyan);
+            PrintDivider();
+            FlushBuffer();
+        }
+
+        public void PrintQuizOffer()
+        {
+            ClearBuffer();
+            PrintDivider('*');
+            AddToBuffer("QUIZ TIME!".PadCenter(ConsoleWidth), ConsoleColor.Magenta);
+            AddToBuffer($"You've learned enough to test your knowledge!", ConsoleColor.Yellow);
+            AddToBuffer("Type 'quiz' at any time to start the cybersecurity quiz", ConsoleColor.Cyan);
+            AddToBuffer("or keep asking questions to learn more first.", ConsoleColor.Cyan);
+            PrintDivider('*');
+            FlushBuffer();
+        }
+
+        public void PrintInputHint()
+        {
+            var hint = new StringBuilder();
+            hint.AppendLine("Try asking about:");
+            hint.AppendLine("- Password creation and management");
+            hint.AppendLine("- Recognizing online scams");
+            hint.AppendLine("- Securing your social media");
+            hint.AppendLine("- Or type 'topics' for full list");
+
+            PrintMessage(hint.ToString(), ConsoleColor.DarkCyan);
         }
 
         public void PrintMessage(string message, ConsoleColor color)
@@ -123,56 +193,41 @@ namespace CybersecurityChatbot.Services
             Console.ResetColor();
         }
 
-        public void PrintQuizQuestion(string question, int questionNumber)
+        #region Helper Methods
+        private void PrintDivider(char dividerChar = '=')
         {
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"\nQuestion {questionNumber}: {question}");
+            _displayBuffer.AppendLine(new string(dividerChar, ConsoleWidth));
+        }
+
+        private void AddToBuffer(string text, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+            _displayBuffer.AppendLine(text);
             Console.ResetColor();
         }
 
-        public void PrintQuizOption(int optionNumber, string optionText)
+        private void ClearBuffer()
         {
-            Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine($"{optionNumber}. {optionText}");
-            Console.ResetColor();
+            _displayBuffer.Clear();
         }
 
-        public void PrintQuizResults(int score, int totalQuestions)
+        private void FlushBuffer()
         {
-            double percentage = (double)score / totalQuestions * 100;
-
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("\nQuiz Results:");
-            Console.ResetColor();
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine($"You scored {score} out of {totalQuestions}");
-            Console.ResetColor();
-
-            if (percentage >= 60)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Well done! You've got a good understanding of these topics.");
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You should spend more time learning about cybersecurity!");
-                Console.WriteLine("Staying safe online is important - keep studying!");
-            }
-            Console.ResetColor();
+            Console.Write(_displayBuffer.ToString());
+            ClearBuffer();
         }
+        #endregion
+    }
 
-        public void PrintExitMessage()
+    public static class StringExtensions
+    {
+        public static string PadCenter(this string str, int totalWidth, char paddingChar = ' ')
         {
-            Console.ForegroundColor = ConsoleColor.Magenta;
-            Console.WriteLine("\nChatbot exited. Stay safe online!");
-            Console.ResetColor();
-        }
+            int padding = totalWidth - str.Length;
+            if (padding <= 0) return str;
 
-        public void ClearScreen()
-        {
-            Console.Clear();
+            return str.PadLeft(str.Length + padding / 2, paddingChar)
+                     .PadRight(totalWidth, paddingChar);
         }
     }
 }

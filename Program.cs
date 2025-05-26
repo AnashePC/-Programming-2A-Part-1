@@ -1,29 +1,36 @@
 ﻿using System;
-using CybersecurityChatbot.Services;
+using System.Collections.Generic;
 
 namespace CybersecurityChatbot
 {
     class Program
     {
-        static void Main(string[] args)
+        // Memory: store user name, interest, and mood
+        static string userName = "";
+        static string userInterest = "";
+        static string userMood = "";
+
+        // Keyword responses using a dictionary of lists
+        static Dictionary<string, List<string>> keywordResponses = new Dictionary<string, List<string>>()
         {
-            var soundService = new SoundService();
-            var displayService = new DisplayService();
-            var responseService = new ResponseService();
-            var chatService = new ChatService(displayService, responseService);
-            var quizService = new QuizService(displayService);
-
-            // Play sound immediately when program starts
-            soundService.PlayWelcomeSound();
-
-            // Then show the interface
-            displayService.DisplayAsciiArt();
-            displayService.DisplayWelcomeScreen();
-
-            Console.ReadLine(); // Wait for user to press Enter
-
-            string userName = displayService.GetUserName();
-            chatService.StartChat(userName, quizService);
-        }
-    }
-}
+            {"password", new List<string> {
+                "Use strong, unique passwords for each account.",
+                "Avoid using personal information like your name in your passwords.",
+                "Consider using a password manager to store your passwords securely."
+            }},
+            {"scam", new List<string> {
+                "Be cautious of emails or messages asking for money or personal details.",
+                "Scammers often impersonate trusted entities like banks.",
+                "Always verify links before clicking — scammers often disguise URLs."
+            }},
+            {"privacy", new List<string> {
+                "Review your app and website permissions regularly.",
+                "Avoid oversharing personal information online.",
+                "Use privacy-focused browsers and search engines."
+            }},
+            {"phishing", new List<string> {
+                "Be cautious of emails asking for credentials — phishing is common.",
+                "Look for spelling mistakes and suspicious links in emails.",
+                "Don't click links from unknown sources. Always verify the sender."
+            }},
+        };
