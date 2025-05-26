@@ -91,3 +91,10 @@ namespace CybersecurityChatbot
                 }
             }
         }
+        static void RespondToKeyword(string keyword)
+        {
+            Random rnd = new Random();
+            List<string> responses = keywordResponses[keyword];
+            int index = rnd.Next(responses.Count);
+            Console.WriteLine($"Chatbot: {responses[index]}");
+        }
