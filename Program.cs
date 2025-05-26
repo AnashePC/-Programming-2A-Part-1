@@ -98,3 +98,23 @@ namespace CybersecurityChatbot
             int index = rnd.Next(responses.Count);
             Console.WriteLine($"Chatbot: {responses[index]}");
         }
+        static void DetectSentiment(string input)
+        {
+            if (input.Contains("worried") || input.Contains("anxious"))
+            {
+                userMood = "worried";
+                Console.WriteLine("Chatbot: It's completely understandable to feel that way. Let's work together to stay safe online.");
+            }
+            else if (input.Contains("curious"))
+            {
+                userMood = "curious";
+                Console.WriteLine("Chatbot: Curiosity is great! Feel free to ask me anything about cybersecurity.");
+            }
+            else if (input.Contains("frustrated") || input.Contains("confused"))
+            {
+                userMood = "frustrated";
+                Console.WriteLine("Chatbot: I understand. Cybersecurity can be overwhelming, but I’m here to help make it simpler.");
+            }
+        }
+    }
+}
