@@ -63,3 +63,14 @@ namespace CybersecurityChatbot
                     Console.WriteLine("Chatbot: Stay safe online, and have a great day!");
                     break;
                 }
+                DetectSentiment(input);
+                bool keywordFound = false;
+                foreach (var keyword in keywordResponses.Keys)
+                {
+                    if (input.Contains(keyword))
+                    {
+                        RespondToKeyword(keyword);
+                        keywordFound = true;
+                        break;
+                    }
+                }
