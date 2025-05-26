@@ -34,3 +34,32 @@ namespace CybersecurityChatbot
                 "Don't click links from unknown sources. Always verify the sender."
             }},
         };
+        // Delegate for response actions
+        delegate void ResponseAction(string keyword);
+
+        static void Main()
+        {
+            Console.WriteLine("👋 Welcome to the Cybersecurity Awareness Chatbot!");
+            Console.Write("Before we begin, what's your name? ");
+            userName = Console.ReadLine();
+
+            Console.WriteLine($"Nice to meet you, {userName}! What cybersecurity topic interests you most (e.g., password, scam, privacy)?");
+            userInterest = Console.ReadLine().ToLower();
+
+            if (keywordResponses.ContainsKey(userInterest))
+            {
+                Console.WriteLine($"Great! I'll remember that you're interested in {userInterest}.");
+            }
+
+            Console.WriteLine("\n✅ You can now chat with me. Type 'exit' to leave anytime.\n");
+
+            while (true)
+            {
+                Console.Write("You: ");
+                string input = Console.ReadLine().ToLower();
+
+                if (input == "exit")
+                {
+                    Console.WriteLine("Chatbot: Stay safe online, and have a great day!");
+                    break;
+                }
