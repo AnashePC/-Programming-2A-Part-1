@@ -74,3 +74,20 @@ namespace CybersecurityChatbot
                         break;
                     }
                 }
+                if (!keywordFound)
+                {
+                    if (input.Contains("help") || input.Contains("more info"))
+                    {
+                        Console.WriteLine("Chatbot: You can ask about password, scam, phishing, or privacy.");
+                    }
+                    else if (userInterest != "" && input.Contains("recommend"))
+                    {
+                        Console.WriteLine($"Chatbot: Since you're interested in {userInterest}, I recommend enabling two-factor authentication for your accounts.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Chatbot: I'm not sure I understand. Could you rephrase that?");
+                    }
+                }
+            }
+        }
